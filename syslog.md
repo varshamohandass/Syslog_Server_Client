@@ -143,6 +143,8 @@ Try to update and install telnet to check if you can reach to server/client
    22  sudo firewall-cmd --permanent --add-port=514/udp
    
    23  sudo firewall-cmd --list-ports
+
+   24   telnet 172.31.25.30 514
    
    24  systemctl status syslog-ng
 
