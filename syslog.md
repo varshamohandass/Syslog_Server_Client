@@ -117,7 +117,10 @@ Check for logs in both server and client by check here
 ```bash
 vi /var/log/messages
 ```
-
+### Try this command to view errors
+```bash
+sudo syslog-ng -Fdev
+```
 Try to update and install telnet to check if you can reach to server/client
    
    11  sudo yum update
