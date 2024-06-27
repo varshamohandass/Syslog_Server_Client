@@ -1,23 +1,45 @@
-## Syslog server commands
+### Install Syslog-ng on Linux (RHEL-9)
+Login as root user
+```bash
+sudo su
+```
 
-    1 subscription-manager repos --enable codeready-builder-for-rhel-9-noarch-rpms
-    
-    2  dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
-    
-    3  cd /etc/yum.repos.d/
-    
-    4  yum install wget
-    
-    5  wget https://copr.fedorainfracloud.org/coprs/czanik/syslog-ng336/repo/epel-8/czanik-syslog-ng41-epel-8.repo
-    
-    6  yum install syslog-ng --nobest
-    
-    7  systemctl enable syslog-ng
-    
-    8  systemctl start syslog-ng
-    
-    9  systemctl status syslog-ng
-    
+```bash
+subscription-manager repos --enable codeready-builder-for-rhel-9-noarch-rpms
+dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+```
+Navigate to the below mentioned directory
+
+```bash
+cd /etc/yum.repos.d/
+```
+
+Install wget (Package installer)
+
+```bash
+yum install wget
+```
+
+
+```bash
+wget https://copr.fedorainfracloud.org/coprs/czanik/syslog-ng336/repo/epel-8/czanik-syslog-ng41-epel-8.repo
+```
+```bash
+yum install syslog-ng --nobest
+```
+
+Enable and start Syslog
+
+```bash
+systemctl enable syslog-ng
+systemctl start syslog-ng
+```
+Check the status of the syslog using the below command
+
+```bash
+systemctl status syslog-ng
+```
+
    10  exit
    
    11  sudo yum update
