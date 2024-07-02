@@ -1,4 +1,4 @@
-### Install Syslog-ng on Linux (RHEL-9)
+# Install Syslog-ng on Linux (RHEL-9)
 Login as root user
 ```bash
 sudo su
@@ -43,7 +43,8 @@ Exit
 ```bash
 exit
 ```
-### Configure Syslog-ng server to receive data from client
+
+## Configure Syslog-ng Client to send logs to Syslog-ng Server
 
 Login as root user using below command
 
@@ -76,78 +77,102 @@ Edit the syslog-ng.conf file
 ```bash
 vi syslog-ng.conf
 ```
-Do the above steps for both Syslog server and client
-
-Add the below listed lines to receive the data from client. This is configuration for **Syslog-ng server**, give the ip address of client
+Add the below listed lines to forward the data to server. This is configuration for **Syslog-ng Client**, give the ip address of Syslog Server
 ```bash
-source s_network {
-  syslog(ip(0.0.0.0) port(514) transport("tcp"));
+
+destination d_network{
+        udp("172.31.25.30" port(514));
 };
-destination d_logs {
-  file("/var/log/syslog-ng/logs.txt");
-};
-log {
-  source(s_network);
-  destination(d_logs);
+
+log{
+source(s_sys);
+destination(d_network);
 };
 ```
+
+
 Restart syslog-ng service
 
 ```bash
 systemctl restart syslog-ng
 ```
+### Repeat the client configuration steps in other 3 Syslog-ng clients
 
-Add the below listed lines to forward the data to server. This is configuration for **Syslog-ng Client**, give the ip address of Syslog Server
+## Configure Syslog-ng server to receive data from client
+
+Login as root user using below command
 ```bash
-source s_local {
-  system();
-  internal();
-};
-destination d_syslog_server {
-  syslog("10.1.2.3" transport("tcp"));
-};
-log {
-  source(s_local);
-  destination(d_syslog_server);
-};
+sudo su
 ```
-Troubleshooting steps
+ 
+Enable syslog
+```bash
+systemctl enable syslog-ng
+```
+
+Go to the directory mentioned below
+```bash
+cd /etc/syslog-ng
+```
+
+List the files to check if syslog-ng.conf is available
+
+```bash
+ls
+```
+
+Edit the syslog-ng.conf file
+
+```bash
+vi syslog-ng.conf
+```
+
+Add the below listed lines to receive the data from client and forward them to Splunk. This is configuration for **Syslog-ng server**, In destination stanza give the ip address of Splunk server
+```bash
+source s_network{
+        udp();
+};
+destination d_from_net{
+file("/var/log/from_net");};
+
+destination splunk_tcp {
+network("172.31.37.209" transport("tcp") port(5514));
+};
+
+log{
+source(s_network);
+destination(d_from_net);
+};
+
+log {
+source(s_network);
+destination(splunk_tcp);
+};
+
+```
+
+
+Restart syslog-ng service
+```bash
+systemctl restart syslog-ng
+```
+
+### Troubleshooting steps
+**Check for Status**
+```bash
+systemctl status syslog-ng
+```
+**Try this command for details**
+```
+journalctl -xeu syslog-ng.service
+```
+
+**Try this command to view errors in syslog-ng.conf**
+```bash
+sudo syslog-ng -Fdev
+```
 
 Check for logs in both server and client by check here
 ```bash
 vi /var/log/messages
 ```
-### Try this command to view errors
-```bash
-sudo syslog-ng -Fdev
-```
-Try to update and install telnet to check if you can reach to server/client
-   
-   11  sudo yum update
-   
-   12  sudo yum install telnet -y
-   
-   13  sudo firewall-cmd --permanent --add-port=514/tcp
-   
-   14  sudo yum list installed | grep firewalld
-   
-   15  sudo yum install firewalld -y
-   
-   16  sudo systemctl status firewalld
-   
-   17  sudo systemctl start firewalld
-   
-   18  sudo systemctl enable firewalld
-   
-   19  sudo firewall-cmd --list-ports
-   
-   21  sudo firewall-cmd --permanent --add-port=514/tcp
-   
-   22  sudo firewall-cmd --permanent --add-port=514/udp
-   
-   23  sudo firewall-cmd --list-ports
-
-   24   telnet 172.31.25.30 514
-   
-   24  systemctl status syslog-ng
-
