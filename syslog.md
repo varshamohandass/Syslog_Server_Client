@@ -1,4 +1,6 @@
-# Install Syslog-ng on Linux (RHEL-9)
+# Setting up Syslog-ng Server-Client architecure in Redhat Linux
+
+## Install Syslog-ng on Linux (RHEL-9)
 Login as root user
 ```bash
 sudo su
@@ -176,3 +178,6 @@ Check for logs in both server and client by check here
 ```bash
 vi /var/log/messages
 ```
+# Receiving data from Syslog-ng server in Splunk
+
+We can see the data in **main** index
