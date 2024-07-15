@@ -1,10 +1,22 @@
 ## Configure data flow: Syslog Server using Universal Forwarder --> Intermediate Forwarder --> Indexer
 
 i.Go to your AWS console Create a 3 new instance (syslog-ng, intermediate forwarder, indexer).
+
 ii.Enable the Security groups in your each servers (5514 & 8000-9999) ports.
+
 iii. Install splunk on a server and use it as indexer and configure it to receive data from 9997 port.
+
 iv. Install splunk on a server and use it as Intermediate Forwarder and configure it to receive data from Universal Forwarder and send data to Indexer.
+
 v. Install syslog-ng (syslog-ng server) and install Universal Forwarder in the same server, then configure inputs.conf (to moniter the log file) and outputs.conf (to send logs to Intermediate forwarder).
+
+### Installation of Splunk in Indexer and Intermediate Forwarder
+
+Splunk installation (follow the documentation for both the intermediate forwarder and the Splunk indexer)
+
+```bash
+https://github.com/URahuman/Splunk-System-admin-training/blob/main/Splunk_enterprise_instalation_linux_9.2.2.md
+```
 
 ## 1. Configure Indexer
 
@@ -22,7 +34,7 @@ ii.Go to Intermediate Forwarder server  **“Settings” >> “Forwarding & rece
 
 ## 3. Setting up syslog-ng server in redhat linux
 
-**Install Syslog-ng on Linux (RHEL-9)**
+**3.1. Install Syslog-ng on Linux (RHEL-9)**
 
 Login as root user
 ```bash
@@ -62,11 +74,8 @@ Exit
 exit
 ```
 
-Splunk installation (follow the documentation for both the intermediate forwarder and the Splunk instance)
 
-https://github.com/URahuman/Splunk-System-admin-training/blob/main/Splunk_enterprise_instalation_linux_9.2.2.md
-
-## Install Universal Forwarder in Syslog server
+**3.2. Install Universal Forwarder in Syslog server**
 
 Splunk Universal Forwarder Installation
 
@@ -74,7 +83,7 @@ Splunk Universal Forwarder Installation
 https://github.com/URahuman/Splunk_Universal_Forwarder
 ```
 
-## 2.Configure the Universal forwarder in Syslog-ng server to send data to an Intermediate Forwarder.
+**3.3. Configure the Universal forwarder in Syslog-ng server to send data to an Intermediate Forwarder**
 
 Login as root user using below command
 ```bash
@@ -128,7 +137,7 @@ server = <intermidiate forwarder ip>:9997
 [tcpout-server:// <intermidiate forwarder ip>:9997]
 ```
 
-#Troubleshooting step
+# Troubleshooting step
 
 1. Provide the below command when you want to check what are the files has been monitered
 ```bash
